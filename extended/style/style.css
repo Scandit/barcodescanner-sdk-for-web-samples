@@ -1,0 +1,521 @@
+:root {
+    --scandit-blue-dimmed: #a8e8ec;
+    --scandit-blue: #2ec0cc;
+    --scandit-blue-active: #30d0d8;
+    --scandit-blue-dark: #2ec0cc;
+    
+    --small-spacing: 0.5rem;
+    --default-spacing: 1rem;
+    --big-spacing: 2rem;
+}
+
+@media screen and (min-width: 450px) {
+    :root {
+        --small-spacing: 1rem;
+        --default-spacing: 1.5rem;
+        --big-spacing: 2.8rem;
+    }
+}
+
+@media screen and (min-width: 737px) { /* iPhone N Plus landscape */
+    :root {
+        --small-spacing: 1.5rem;
+        --default-spacing: 2.5rem;
+        --big-spacing: 4rem;
+    }
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+    color: black;
+    font-family: 'Open Sans', sans-serif;
+    width: 100vw;
+    min-height: 100vh;
+    max-height: 100vh;
+    height: 100vh;
+    overflow-x: hidden;
+}
+
+a,
+a:visited {
+    color: var(--scandit-blue);
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#main {
+    align-items: center;
+    font-size: 3vh;
+    padding: 0;
+    height: 100vh;
+}
+
+#settings {
+    align-items: flex-start;
+}
+
+#scandit-barcode-picker {
+    background: black;
+    width: 100%;
+    height: 70vh;
+}
+
+#scandit-barcode-result {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    width: 100%;
+}
+
+#scandit-barcode-result .symbology {
+    text-transform: uppercase;
+    color: #aaa;
+    margin-right: 0.5em;
+}
+
+#scandit-barcode-result .symbology::after {
+    content: ":";
+}
+
+button,
+button:active,
+button[disabled]:hover {
+    --webkit-appearance: none;
+    border: none;
+    border-radius: 0;
+    outline: none;
+    font-size: 18px;
+    padding: 0.4em 0.6em;
+    text-transform: uppercase;
+    font-family: 'Open Sans', sans-serif;
+    background: var(--scandit-blue);
+    color: white;
+}
+
+#main button {
+    font-size: 22px;
+}
+
+button.outline {
+    background: transparent;
+    border: 1px solid var(--scandit-blue);
+    color: var(--scandit-blue);
+}
+
+button:hover {
+    background: var(--scandit-blue-active);
+}
+
+button.outline:hover {
+    color: white;
+}
+
+button[disabled] {
+    opacity: 0.4;
+}
+
+#continue-scanning-button,
+#show-settings-button {
+    margin-bottom: 2vh;
+}
+
+
+/* Settings page */
+
+.page {
+    padding: 0 var(--small-spacing);
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 736px; /* iPhone N Plus landscape */
+}
+
+.section.full-width-section {
+    max-width: none;
+}
+
+.section > div {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+@media screen and (min-width: 450px) {
+    .section > div {
+        justify-content: flex-start;
+    }
+}
+
+@media screen and (min-width: 737px) { /* iPhone N Plus landscape */
+    .section > div {
+        justify-content: flex-start;
+    }
+}
+
+.section > div:not(.section-header) {
+    padding: 1rem var(--small-spacing) 0 var(--small-spacing);
+    width: calc(100% - (2 * var(--small-spacing)))
+}
+
+.section > .section-header + :not(.section-header) {
+    padding-top: 0;
+}
+
+.section:not(:last-child) {
+    margin-bottom: var(--default-spacing);
+}
+
+.section > div > span:first-child {
+    min-width: 100px;
+    flex-shrink: 1;
+}
+
+.section .buttons {
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem var(--small-spacing) 0 var(--small-spacing);
+    width: calc(100% - (2 * var(--small-spacing)))
+}
+
+.section .buttons button {
+    flex: 1;
+    min-height: 4rem;
+    min-width: 8rem;
+    max-width: 200px;
+    font-weight: bold;
+    margin-right: var(--default-spacing);
+}
+
+.section .buttons button:last-child {
+    margin-right: 0;
+}
+
+.section-header,
+#settings .symbology {
+    display: flex;
+    flex-direction: row;
+}
+
+.section-header {
+    align-items: baseline;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#settings .symbology {
+    flex-basis: calc(100% / 1);
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    margin: 0.25rem 0;
+}
+
+@media screen and (min-width: 450px) {
+    #settings .symbology {
+        flex-basis: calc(100% / 2);
+        justify-content: flex-start;
+        flex-direction: row;
+        margin: 0.5rem 0;
+    }
+}
+
+@media screen and (min-width: 737px) { /* iPhone N Plus landscape */
+    #settings .symbology {
+        flex-basis: calc(100% / 3);
+        margin: 1rem 0;
+    }
+}
+
+#settings .symbology > span:last-child {
+    margin-right: 5px;
+}
+
+input[type="text"],
+input[type="number"] {
+    appearance: none;
+    -webkit-appearance: none;
+
+    border: 2px solid #ddd;
+    height: 2em;
+    /* margin: 0 15px; */
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: bold;
+    color: #888;
+    width: 6em;
+    box-shadow: inset 0 0 3px #f3f3f3;
+    border-radius: 0;
+}
+
+input[type="text"]:not(:first-child),
+input[type="number"]:not(:first-child) {
+    margin-left: 1rem;
+}
+
+input[type="text"]:disabled,
+input[type="number"]:disabled {
+    background: #f5f5f5;
+    color: #bbb;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--scandit-blue);
+}
+
+
+/* Toggle */
+
+
+/* The toggle - the box around the slider */
+
+.toggle {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    min-width: 60px;
+    max-width: 60px;
+    height: 34px;
+    min-height: 34px;
+    max-height: 34px;
+    margin-right: 1em;
+    margin-left: 0;
+}
+
+.toggle:last-child {
+    margin-right: 0;
+    margin-left: 1em;
+}
+
+
+/* Hide default HTML checkbox */
+
+.toggle input {
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    margin: 0;
+}
+
+
+/* The slider */
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: var(--scandit-blue);
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Segment Item */
+
+.segment-item {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 30px;
+    min-width: 100px;
+    flex: 1;
+}
+
+/* Hide default HTML checkbox */
+
+.segment-item input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    margin: 0;
+}
+
+.segment-item-inner::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100% - 2px);
+    height: 100%;
+    z-index: -1;
+    border-right: 2px solid #ddd;
+    background-color: #eee;
+    -webkit-transition: .2s;
+    transition: .2s;
+    cursor: pointer;
+}
+
+.segment-item:last-child input + .segment-item-inner::before,
+.segment-item:last-child input:disabled + .segment-item-inner::before {
+    border: 0;
+    width: 100%;
+}
+
+.segment-item-inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #888;
+    font-weight: bold;
+    -webkit-transition: .2s;
+    transition: .2s;
+}
+
+.segment-item input:disabled + .segment-item-inner::before {
+    background-color: #fafafa;
+    border-right: 2px solid #eee;
+}
+
+.segment-item input:checked + .segment-item-inner::before {
+    background-color: var(--scandit-blue);
+}
+
+.segment-item input:disabled:checked + .segment-item-inner::before {
+    background-color: var(--scandit-blue-dimmed);
+}
+
+.segment-item input:disabled + .segment-item-inner {
+    color: #ccc;
+}
+
+.segment-item input:checked + .segment-item-inner {
+    color: white;
+}
+
+/* Loading indicator */
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    margin: 100px auto;
+}
+
+.double-bounce1,
+.double-bounce2 {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #333;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    left: 0;
+    -webkit-animation: sk-bounce 2.0s infinite ease-in-out;
+    animation: sk-bounce 2.0s infinite ease-in-out;
+}
+
+.double-bounce2 {
+    -webkit-animation-delay: -1.0s;
+    animation-delay: -1.0s;
+}
+
+@-webkit-keyframes sk-bounce {
+    0%,
+    100% {
+        -webkit-transform: scale(0.0)
+    }
+    50% {
+        -webkit-transform: scale(1.0)
+    }
+}
+
+@keyframes sk-bounce {
+    0%,
+    100% {
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+    }
+    50% {
+        transform: scale(1.0);
+        -webkit-transform: scale(1.0);
+    }
+}
+
+/* Utilities */
+
+[padding-top] {
+    padding-top: 1rem !important;
+}
+
+[padding-bottom] {
+    padding-bottom: 1rem !important;
+}
+
+[padding-left] {
+    padding-left: 1rem !important;
+}
+
+@media screen and (min-width: 450px) {
+    [padding-top] {
+        padding-top: 1rem !important;
+    }
+
+    [padding-bottom] {
+        padding-bottom: 1rem !important;
+    }
+
+    [padding-left] {
+        padding-left: 2rem !important;
+    }
+}
+
+@media screen and (min-width: 737px) { /* iPhone N Plus landscape */
+    [padding-top] {
+        padding-top: 2rem !important;
+    }
+
+    [padding-bottom] {
+        padding-bottom: 2rem !important;
+    }
+
+    [padding-left] {
+        padding-left: 4rem !important;
+    }
+}
