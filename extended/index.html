@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>Scandit Web SDK</title>
     <link rel="stylesheet" href="style/style.css">
 
@@ -11,7 +11,7 @@
         Add the library, as explained on http://docs.scandit.com/stable/web/index.html
     -->
     <!-- E.g. load from CDN -->
-    <script src="https://unpkg.com/scandit-sdk"></script>
+    <!-- <script src="https://unpkg.com/scandit-sdk"></script> -->
     <!-- or -->
     <!-- <script src="https://cdn.jsdelivr.net/npm/scandit-sdk"></script> -->
     <!-- or -->
@@ -20,9 +20,8 @@
     <!-- <script src="https://cdn.jsdelivr.net/npm/scandit-sdk@1.0.5"></script> -->
     <!-- or -->
     <!-- <script src="/node_modules/scandit-sdk/build/browser/index.min.js"></script> -->
-
-    <script src="js/setup.js"></script>
-    <script src="js/app.js"></script>
+    <!-- or -->
+    <script src="dist/scripts.js"></script>
 </head>
 
 <body>
@@ -64,8 +63,7 @@
             <div padding-top>
                 <span>Restricted Scanning Area</span>
                 <label class="toggle">
-                    <input type="checkbox" name="Restricted Scanning Toggle" id="restricted-scanning"
-                        onchange="restrictedScanningToggled()">
+                    <input type="checkbox" name="Restricted Scanning Toggle" id="restricted-scanning" onchange="restrictedScanningToggled()">
                     <span class="slider"></span>
                 </label>
             </div>
@@ -128,15 +126,13 @@
             </div>
             <div id="camera-buttons">
                 <div class="segment-item">
-                    <input class="camera-button" type="checkbox"
-                        name="Front Camera Toggle" id="camera-front" onchange="cameraEnabledToggled('front')">
+                    <input class="camera-button" type="checkbox" name="Front Camera Toggle" id="camera-front" onchange="cameraEnabledToggled('front')">
                     <div class="segment-item-inner">
                         <span>FRONT</span>
                     </div>
                 </div>
                 <div class="segment-item">
-                    <input class="camera-button" type="checkbox"
-                        name="Back Camera Toggle" id="camera-back" onchange="cameraEnabledToggled('back')">
+                    <input class="camera-button" type="checkbox" name="Back Camera Toggle" id="camera-back" onchange="cameraEnabledToggled('back')">
                     <div class="segment-item-inner">
                         <span>BACK</span>
                     </div>

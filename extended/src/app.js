@@ -1,115 +1,104 @@
-// Global variables
-const Constants = {
-    licenseKey: "-- ENTER YOUR SCANDIT LICENSE KEY HERE --",
-    engineLocation: "https://unpkg.com/scandit-sdk/build", // could also be e.g. "build"
-}
+import * as ScanditSDK from "scandit-sdk";
+import { ViewFunctions } from "./helpers";
+import { Elements } from "./elements";
+import { Config } from "./config";
 
-let picker;
-let scanSettings = new ScanditSDK.ScanSettings();
-let pickerCreateOptions = {
-    visible: false,
-    scanningPaused: true,
-    scanSettings: scanSettings,
-    guiStyle: ScanditSDK.BarcodePicker.GuiStyle.VIEWFINDER,
-};
-let continuousScanning = false;
-
-// Helpers
-
-const setupDefaultScanSettings = () => {
-    // Setup the scanner settings
-    scanSettings.enableSymbologies([
-        ScanditSDK.Barcode.Symbology.EAN8,
-        ScanditSDK.Barcode.Symbology.EAN13,
-        ScanditSDK.Barcode.Symbology.UPCA,
-        ScanditSDK.Barcode.Symbology.UPCE,
-        ScanditSDK.Barcode.Symbology.CODE128,
-        ScanditSDK.Barcode.Symbology.CODE39,
-        ScanditSDK.Barcode.Symbology.CODE93
-    ]);
-    scanSettings.setCodeDuplicateFilter(1000);
-    return scanSettings;
-}
-
-// Handlers
-
-const onScan = scanResult => {
-    if (!continuousScanning) {
-        Elements.continueButton.hidden = false;
-        Elements.continueButton.disabled = false;
-        picker.pauseScanning();
-    }
-    console.log(scanResult);
-    Elements.resultContainer.innerHTML = scanResult.barcodes.reduce((string, barcode) =>
-        `${string}<span class="symbology">${ScanditSDK.Barcode.Symbology.toHumanizedName(barcode.symbology)}</span>
-         ${barcode.data}<br>`,
-        "");
-}
-
-// In a real application, you'd handle errors properly, but in development, we just want to be aware if they happen
-const handleError = error => {
-    alert(error);
-}
-
-class App {
+export class App {
     constructor() {
-        setupDefaultScanSettings();
+        this.continuousScanning = false;
+        this.picker;
+
+        this.scanSettings = new ScanditSDK.ScanSettings();
+        this.scanSettings.enableSymbologies([
+            ScanditSDK.Barcode.Symbology.EAN8,
+            ScanditSDK.Barcode.Symbology.EAN13,
+            ScanditSDK.Barcode.Symbology.UPCA,
+            ScanditSDK.Barcode.Symbology.UPCE,
+            ScanditSDK.Barcode.Symbology.CODE128,
+            ScanditSDK.Barcode.Symbology.CODE39,
+            ScanditSDK.Barcode.Symbology.CODE93
+        ]);
+        this.scanSettings.setCodeDuplicateFilter(1000);
+
+        this.pickerCreateOptions = {
+            visible: false,
+            scanningPaused: true,
+            scanSettings: this.scanSettings,
+            guiStyle: ScanditSDK.BarcodePicker.GuiStyle.VIEWFINDER,
+        };
+    }
+
+    handleError(error) {
+        // In a real application, you'd handle errors properly, but in development, we just want to be aware if they happen
+        alert(error);
     }
 
     start() {
         console.log('Starting up app');
         this.startScanner().then(() => {
-            showSettings();
+            ViewFunctions.showSettings();
             this.applySettingsToPage();
+            this.picker.pauseScanning();
         })
     }
 
     startScanner() {
-        // Configure the library with a license key and set the location of the engine
-        // See http://docs.scandit.com/stable/web/globals.html#configure
-        return ScanditSDK.configure(Constants.licenseKey, {
-                engineLocation: Constants.engineLocation,
+        return ScanditSDK.configure(Config.licenseKey, {
+                engineLocation: Config.engineLocation,
                 preloadCameras: true,
                 preloadEngineLibrary: true,
             })
-            .then(() => this.createPicker(pickerCreateOptions))
-            .catch(handleError);
+            .then(() => this.createPicker(this.pickerCreateOptions))
+            .catch(this.handleError);
     }
 
     createPicker(options) {
-        if (picker) {
-            picker.destroy();
+        if (this.picker) {
+            this.picker.destroy();
         }
 
         return ScanditSDK.BarcodePicker.create(Elements.scannerContainer, options)
             .then(barcodePicker => {
-                picker = barcodePicker;
+                this.picker = barcodePicker;
 
                 // Setup the picker callbacks
-                picker.onScan(onScan);
-                picker.onScanError(handleError);
-                return picker;
+                this.picker.onScan(this.onScan);
+                this.picker.onScanError(this.handleError);
+                return this.picker;
             })
-            .catch(handleError);
+            .catch(this.handleError);
+    }
+
+    onScan(scanResult) {
+        if (!this.continuousScanning) {
+            Elements.continueButton.hidden = false;
+            Elements.continueButton.disabled = false;
+            this.picker.pauseScanning();
+        }
+        console.log(scanResult);
+        Elements.resultContainer.innerHTML = scanResult.barcodes.reduce((string, barcode) =>
+            `${string}<span class="symbology">${ScanditSDK.Barcode.Symbology.toHumanizedName(barcode.symbology)}</span>
+             ${barcode.data}<br>`,
+            "");
     }
 
     applySettingsToPage() {
-        setCameraButtonsEnabled()
+        ViewFunctions.setCameraButtonsEnabled()
 
         Object.keys(Elements.symbology).forEach(symbology => {
             const element = Elements.symbology[symbology];
-            const enabled = scanSettings.isSymbologyEnabled(symbology);
+            const enabled = this.scanSettings.isSymbologyEnabled(symbology);
             element.setChecked(enabled);
         });
 
         Object.keys(Elements.guiStyle).forEach(guiStyle => {
             if (ScanditSDK.BarcodePicker.GuiStyle[guiStyle]) {
-                const enabled = guiStyle === ScanditSDK.BarcodePicker.GuiStyle[picker.guiStyle];
+                const enabled = guiStyle === ScanditSDK.BarcodePicker.GuiStyle[this.picker.guiStyle];
                 Elements.guiStyle[guiStyle].setChecked(enabled);
             }
         })
 
-        const currentScanArea = scanSettings.getSearchArea();
+        const currentScanArea = this.scanSettings.getSearchArea();
         Elements.restrictedArea.width.value = currentScanArea.width
         Elements.restrictedArea.height.value = currentScanArea.height
         Elements.restrictedArea.x.value = currentScanArea.x
@@ -117,15 +106,15 @@ class App {
 
         const restrictedScanningEnabled = currentScanArea.height !== 1 || currentScanArea.width !== 1;
         Elements.restrictedAreaToggle.checked = restrictedScanningEnabled;
-        restrictedScanningToggled(); // manual trigger to disabled the inputs even if the toggle did not change
+        ViewFunctions.restrictedScanningToggled(); // manual trigger to disabled the inputs even if the toggle did not change
 
-        Elements.beepEnabled.checked = picker.isPlaySoundOnScanEnabled();
-        Elements.vibrationEnabled.checked = picker.isVibrateOnScanEnabled();
-        Elements.duplicateCodeFilter.value = scanSettings.getCodeDuplicateFilter();
-        Elements.maxCodesPerFrame = scanSettings.getMaxNumberOfCodesPerFrame();
-        Elements.mirroringEnabled.checked = picker.isMirrorImageEnabled();
+        Elements.beepEnabled.checked = this.picker.isPlaySoundOnScanEnabled();
+        Elements.vibrationEnabled.checked = this.picker.isVibrateOnScanEnabled();
+        Elements.duplicateCodeFilter.value = this.scanSettings.getCodeDuplicateFilter();
+        Elements.maxCodesPerFrame = this.scanSettings.getMaxNumberOfCodesPerFrame();
+        Elements.mirroringEnabled.checked = this.picker.isMirrorImageEnabled();
 
-        const activeCameraType = picker.getActiveCamera().cameraType
+        const activeCameraType = this.picker.getActiveCamera().cameraType
         Elements.camera.front.checked = activeCameraType === ScanditSDK.Camera.Type.FRONT
         Elements.camera.back.checked = activeCameraType === ScanditSDK.Camera.Type.BACK
     }
@@ -134,11 +123,11 @@ class App {
         // Enable symbologies that are toggled on
         Object.keys(Elements.symbology)
             .filter(symbology => Elements.symbology[symbology].checked())
-            .forEach(symbology => scanSettings.enableSymbologies(symbology));
+            .forEach(symbology => this.scanSettings.enableSymbologies(symbology));
 
         // If the restricted area toggle is on, set the restricted search area where barcodes are scanned
         if (Elements.restrictedAreaToggle.checked) {
-            scanSettings.setSearchArea({
+            this.scanSettings.setSearchArea({
                 width: parseFloat(Elements.restrictedArea.width.value, 10),
                 height: parseFloat(Elements.restrictedArea.height.value, 10),
                 x: parseFloat(Elements.restrictedArea.x.value, 10),
@@ -147,9 +136,9 @@ class App {
         }
 
         // Set the code duplicate filter
-        scanSettings.setCodeDuplicateFilter(parseInt(Elements.duplicateCodeFilter.value, 10));
+        this.scanSettings.setCodeDuplicateFilter(parseInt(Elements.duplicateCodeFilter.value, 10));
         // Set the max number of barcodes per frame that can be recognized
-        scanSettings.setMaxNumberOfCodesPerFrame(parseInt(Elements.maxCodesPerFrame, 10));
+        this.scanSettings.setMaxNumberOfCodesPerFrame(parseInt(Elements.maxCodesPerFrame, 10));
 
         this.applyPickerSettings({
             cameraType: Elements.camera.activeType(),
@@ -157,7 +146,7 @@ class App {
             soundEnabled: Elements.beepEnabled.checked,
             vibrationEnabled: Elements.vibrationEnabled.checked,
             mirroringEnabled: Elements.mirroringEnabled.checked,
-            scanSettings: scanSettings,
+            scanSettings: this.scanSettings,
         })
     }
 
@@ -173,7 +162,7 @@ class App {
             .then(cameras => {
                 const newActiveCamera = cameras.filter(camera => camera.cameraType === cameraType)[0];
                 console.log(cameras, newActiveCamera);
-                return picker.setActiveCamera(newActiveCamera);
+                return this.picker.setActiveCamera(newActiveCamera);
             });
     }
 
@@ -206,16 +195,6 @@ class App {
                 picker.applyScanSettings(scanSettings);
                 return picker;
             })
-            .catch(handleError);
-    }
-}
-
-let app;
-
-document.onreadystatechange = () => {
-    if (document.readyState === 'complete') {
-        setupElements();
-        app = new App();
-        app.start();
+            .catch(this.handleError);
     }
 }

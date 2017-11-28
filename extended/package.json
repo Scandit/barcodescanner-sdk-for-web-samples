@@ -1,0 +1,20 @@
+{
+  "name": "scandit-sdk-extended-sample",
+  "version": "1.0.0",
+  "description": "Extended sample project for the Scandit Web SDK",
+  "repository": "https://github.com/Scandit/barcodescanner-sdk-for-web-samples",
+  "author": "Scandit",
+  "license": "Apache License 2.0",
+
+  "scripts": {
+    "start": "webpack-dev-server"
+  },
+
+  "dependencies": {
+    "scandit-sdk": "^1.2.0"
+  },
+  "devDependencies": {
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.4"
+  }
+}
