@@ -3,28 +3,26 @@ import { ViewFunctions } from "./helpers";
 import { Elements } from "./elements";
 import { Config } from "./config";
 
+/*
+ * Core functionality, including barcode scanning
+ */
+
 export class App {
     constructor() {
         this.continuousScanning = false;
         this.picker;
 
+        // Create a basic scanner settings object
         this.scanSettings = new ScanditSDK.ScanSettings();
         this.scanSettings.enableSymbologies([
-            ScanditSDK.Barcode.Symbology.EAN8,
-            ScanditSDK.Barcode.Symbology.EAN13,
             ScanditSDK.Barcode.Symbology.UPCA,
-            ScanditSDK.Barcode.Symbology.UPCE,
             ScanditSDK.Barcode.Symbology.CODE128,
-            ScanditSDK.Barcode.Symbology.CODE39,
-            ScanditSDK.Barcode.Symbology.CODE93
         ]);
-        this.scanSettings.setCodeDuplicateFilter(1000);
 
-        this.pickerCreateOptions = {
+        this.createPickerOptions = {
             visible: false,
             scanningPaused: true,
             scanSettings: this.scanSettings,
-            guiStyle: ScanditSDK.BarcodePicker.GuiStyle.VIEWFINDER,
         };
     }
 
@@ -33,25 +31,35 @@ export class App {
         alert(error);
     }
 
+    /**
+     * Start the app by starting the scanner in the background and showing the settings
+     * 
+     */
     start() {
-        console.log('Starting up app');
-        this.startScanner().then(() => {
-            ViewFunctions.showSettings();
-            this.applySettingsToPage();
-            this.picker.pauseScanning();
-        })
+        this.startScanner().then(() => ViewFunctions.showSettings());
     }
 
+    /**
+     * Configure the scanner and create a barcode picker
+     * @see http://docs.scandit.com/stable/web/globals.html#configure
+     *
+     */
     startScanner() {
         return ScanditSDK.configure(Config.licenseKey, {
                 engineLocation: Config.engineLocation,
                 preloadCameras: true,
                 preloadEngineLibrary: true,
             })
-            .then(() => this.createPicker(this.pickerCreateOptions))
+            .then(() => this.createPicker(this.createPickerOptions))
             .catch(this.handleError);
     }
 
+    /**
+     * Create the barcode picker in the container element and attach the callbacks
+     * @see http://docs.scandit.com/stable/web/classes/barcodepicker.html#create
+     *
+     * @param {object} options The options used to create the picker
+     */
     createPicker(options) {
         if (this.picker) {
             this.picker.destroy();
@@ -62,83 +70,70 @@ export class App {
                 this.picker = barcodePicker;
 
                 // Setup the picker callbacks
-                this.picker.onScan(this.onScan);
-                this.picker.onScanError(this.handleError);
+                this.picker.onScan(this.onScan.bind(this));
+                this.picker.onScanError(this.handleError.bind(this));
                 return this.picker;
             })
             .catch(this.handleError);
     }
 
+    /**
+     * After scanning, pause the scanner if we're not scanning continuously and show the scanned barcodes
+     * @see http://docs.scandit.com/stable/web/classes/barcodepicker.html#onscan
+     *
+     * @param {ScanResult} scanResult 
+     */
     onScan(scanResult) {
         if (!this.continuousScanning) {
-            Elements.continueButton.hidden = false;
-            Elements.continueButton.disabled = false;
             this.picker.pauseScanning();
+            ViewFunctions.setScanningUI(true);
         }
-        console.log(scanResult);
-        Elements.resultContainer.innerHTML = scanResult.barcodes.reduce((string, barcode) =>
-            `${string}<span class="symbology">${ScanditSDK.Barcode.Symbology.toHumanizedName(barcode.symbology)}</span>
-             ${barcode.data}<br>`,
-            "");
+        ViewFunctions.showBarcodes(scanResult.barcodes);
     }
 
+    /**
+     * Get the latest settings used by the scanner and apply it to the settings page
+     */
     applySettingsToPage() {
         ViewFunctions.setCameraButtonsEnabled()
 
-        Object.keys(Elements.symbology).forEach(symbology => {
-            const element = Elements.symbology[symbology];
-            const enabled = this.scanSettings.isSymbologyEnabled(symbology);
-            element.setChecked(enabled);
+        Elements.symbology.all.forEach(symbologyElement => {
+            const enabled = this.scanSettings.isSymbologyEnabled(symbologyElement.symbology());
+            symbologyElement.setChecked(enabled);
         });
 
-        Object.keys(Elements.guiStyle).forEach(guiStyle => {
-            if (ScanditSDK.BarcodePicker.GuiStyle[guiStyle]) {
-                const enabled = guiStyle === ScanditSDK.BarcodePicker.GuiStyle[this.picker.guiStyle];
-                Elements.guiStyle[guiStyle].setChecked(enabled);
-            }
+        Elements.guiStyle.all.forEach(guiStyleElement => {
+            const enabled = guiStyleElement.guiStyle() === ScanditSDK.BarcodePicker.GuiStyle[this.picker.guiStyle];
+            guiStyleElement.setChecked(enabled);
         })
 
-        const currentScanArea = this.scanSettings.getSearchArea();
-        Elements.restrictedArea.width.value = currentScanArea.width
-        Elements.restrictedArea.height.value = currentScanArea.height
-        Elements.restrictedArea.x.value = currentScanArea.x
-        Elements.restrictedArea.y.value = currentScanArea.y
-
-        const restrictedScanningEnabled = currentScanArea.height !== 1 || currentScanArea.width !== 1;
-        Elements.restrictedAreaToggle.checked = restrictedScanningEnabled;
-        ViewFunctions.restrictedScanningToggled(); // manual trigger to disabled the inputs even if the toggle did not change
+        Elements.restrictedArea.setArea(this.scanSettings.getSearchArea());
 
         Elements.beepEnabled.checked = this.picker.isPlaySoundOnScanEnabled();
         Elements.vibrationEnabled.checked = this.picker.isVibrateOnScanEnabled();
         Elements.duplicateCodeFilter.value = this.scanSettings.getCodeDuplicateFilter();
-        Elements.maxCodesPerFrame = this.scanSettings.getMaxNumberOfCodesPerFrame();
+        Elements.maxCodesPerFrame.value = this.scanSettings.getMaxNumberOfCodesPerFrame();
         Elements.mirroringEnabled.checked = this.picker.isMirrorImageEnabled();
 
-        const activeCameraType = this.picker.getActiveCamera().cameraType
-        Elements.camera.front.checked = activeCameraType === ScanditSDK.Camera.Type.FRONT
-        Elements.camera.back.checked = activeCameraType === ScanditSDK.Camera.Type.BACK
+        Elements.camera.setActive(this.picker.getActiveCamera().cameraType);
     }
 
+    /**
+     * Get the settings from the settings page and apply it to the scanner
+     */
     applySettingsToScanner() {
-        // Enable symbologies that are toggled on
-        Object.keys(Elements.symbology)
-            .filter(symbology => Elements.symbology[symbology].checked())
-            .forEach(symbology => this.scanSettings.enableSymbologies(symbology));
+        Elements.symbology.allEnabledValue().forEach(symbology => this.scanSettings.enableSymbologies(symbology));
+        Elements.symbology.allDisabledValue().forEach(symbology => this.scanSettings.disableSymbologies(symbology));
 
         // If the restricted area toggle is on, set the restricted search area where barcodes are scanned
-        if (Elements.restrictedAreaToggle.checked) {
-            this.scanSettings.setSearchArea({
-                width: parseFloat(Elements.restrictedArea.width.value, 10),
-                height: parseFloat(Elements.restrictedArea.height.value, 10),
-                x: parseFloat(Elements.restrictedArea.x.value, 10),
-                y: parseFloat(Elements.restrictedArea.y.value, 10),
-            });
+        if (Elements.restrictedArea.isRestricted()) {
+            this.scanSettings.setSearchArea(Elements.restrictedArea.value);
         }
 
         // Set the code duplicate filter
         this.scanSettings.setCodeDuplicateFilter(parseInt(Elements.duplicateCodeFilter.value, 10));
         // Set the max number of barcodes per frame that can be recognized
-        this.scanSettings.setMaxNumberOfCodesPerFrame(parseInt(Elements.maxCodesPerFrame, 10));
+        this.scanSettings.setMaxNumberOfCodesPerFrame(parseInt(Elements.maxCodesPerFrame.value, 10));
 
         this.applyPickerSettings({
             cameraType: Elements.camera.activeType(),
@@ -161,7 +156,6 @@ export class App {
         return ScanditSDK.CameraAccess.getCameras()
             .then(cameras => {
                 const newActiveCamera = cameras.filter(camera => camera.cameraType === cameraType)[0];
-                console.log(cameras, newActiveCamera);
                 return this.picker.setActiveCamera(newActiveCamera);
             });
     }

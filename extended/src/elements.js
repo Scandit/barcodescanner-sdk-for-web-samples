@@ -1,4 +1,9 @@
 import * as ScanditSDK from "scandit-sdk";
+import { ViewFunctions } from "./helpers";
+
+/*
+ * Functionality related to elements in the view
+ */
 
 export const Elements = {
     setup: () => {
@@ -31,7 +36,8 @@ export const Elements = {
         };
         Elements.symbology[symbology].symbology = () => checkbox.id.replace('symbology-', '');
         // Add the symbology element to the view
-        Elements.symbologies.appendChild(template.content)
+        Elements.symbologies.appendChild(template.content);
+        Elements.symbology.all.push(Elements.symbology[symbology]);
     },
 
     addGuiStyle: guiStyle => {
@@ -57,6 +63,7 @@ export const Elements = {
         Elements.guiStyle[guiStyle].guiStyle = () => checkbox.id.replace('gui-style-', '');
         // Add the guiStyle element to the view
         Elements.guiStyles.appendChild(template.content)
+        Elements.guiStyle.all.push(Elements.guiStyle[guiStyle])
     },
 
     setupElementReferences: () => {
@@ -76,6 +83,11 @@ export const Elements = {
     setupSymbologies: () => {
         Elements.symbologies = document.getElementById("symbologies");
         Elements.symbology = {};
+        Elements.symbology.all = [];
+        Elements.symbology.allEnabled = () => Elements.symbology.all.filter(symbology => symbology.checked());
+        Elements.symbology.allEnabledValue = () => Elements.symbology.allEnabled().map(el => el.symbology());
+        Elements.symbology.allDisabled = () => Elements.symbology.all.filter(symbology => !symbology.checked());
+        Elements.symbology.allDisabledValue = () => Elements.symbology.allDisabled().map(el => el.symbology());
 
         // Add toggles for the symbologies dynamically and setup the convenience accessor for the symbologies toggles
         Object.keys(ScanditSDK.Barcode.Symbology).forEach(key => {
@@ -88,19 +100,19 @@ export const Elements = {
     setupGuiStyles: () => {
         Elements.guiStyles = document.getElementById("gui-styles");
         Elements.guiStyle = {};
+        Elements.guiStyle.all = [];
 
-        const guiStyles = [
+        Elements.guiStyle.values = [
             ScanditSDK.BarcodePicker.GuiStyle.NONE,
             ScanditSDK.BarcodePicker.GuiStyle.LASER,
             ScanditSDK.BarcodePicker.GuiStyle.VIEWFINDER
         ]
-        guiStyles.forEach(guiStyle => Elements.addGuiStyle(guiStyle));
+        Elements.guiStyle.values.forEach(guiStyle => Elements.addGuiStyle(guiStyle));
 
         Elements.guiStyles.active = () =>
             ScanditSDK.BarcodePicker.UIStyle[
-                Object.keys(Elements.guiStyle)
-                .filter(s => ScanditSDK.BarcodePicker.UIStyle[s] !== undefined)
-                .filter(style => Elements.guiStyle[style].checked())[0]]
+            Elements.guiStyle.all.filter(el => el.checked())[0].guiStyle()
+            ]
     },
 
     setupRestrictedArea: () => {
@@ -111,6 +123,24 @@ export const Elements = {
             x: document.getElementById("restricted-area-x"),
             y: document.getElementById("restricted-area-y"),
         };
+        Elements.restrictedArea.value = () => ({
+            width: parseFloat(Elements.restrictedArea.width.value, 10),
+            height: parseFloat(Elements.restrictedArea.height.value, 10),
+            x: parseFloat(Elements.restrictedArea.x.value, 10),
+            y: parseFloat(Elements.restrictedArea.y.value, 10),
+        });
+        Elements.restrictedArea.isRestricted = () => Elements.restrictedAreaToggle.checked;
+        Elements.restrictedArea.setArea = area => {
+            Elements.restrictedArea.width.value = area.width
+            Elements.restrictedArea.height.value = area.height
+            Elements.restrictedArea.x.value = area.x
+            Elements.restrictedArea.y.value = area.y
+
+            const restrictedScanningEnabled = area.height !== 1 || area.width !== 1;
+            Elements.restrictedAreaToggle.checked = restrictedScanningEnabled;
+            // manual trigger to disabled the inputs even if the toggle did not change
+            ViewFunctions.restrictedScanningToggled();
+        }
     },
 
     setupAdvancedSettings: () => {
@@ -127,5 +157,15 @@ export const Elements = {
             back: document.getElementById("camera-back"),
             activeType: () => Elements.camera.back.checked ? ScanditSDK.Camera.Type.BACK : ScanditSDK.Camera.Type.FRONT
         }
+
+        Elements.camera.all = [
+            Elements.camera.front,
+            Elements.camera.back,
+        ];
+
+        Elements.camera.setActive = cameraType => {
+            Elements.camera.front.checked = cameraType === ScanditSDK.Camera.Type.FRONT
+            Elements.camera.back.checked = cameraType === ScanditSDK.Camera.Type.BACK
+        }
     }
-}
+};

@@ -2,6 +2,10 @@ import * as ScanditSDK from "scandit-sdk";
 import { Elements } from "./elements";
 import { app } from "./index";
 
+/*
+ * Functionality related to the UI of the app
+ */
+
 export const ViewFunctions = {
     setup: () => {
         window.continueScanning = ViewFunctions.continueScanning;
@@ -32,12 +36,10 @@ export const ViewFunctions = {
 
         app.applySettingsToScanner();
         if (app.continuousScanning) {
-            Elements.continueButton.disabled = true;
-            Elements.continueButton.hidden = true;
+            ViewFunctions.setScanningUI(false);
             app.picker.resumeScanning();
         } else {
-            Elements.continueButton.disabled = false;
-            Elements.continueButton.hidden = false;
+            ViewFunctions.setScanningUI(true);
         }
     },
 
@@ -45,11 +47,24 @@ export const ViewFunctions = {
         Elements.loadingContainer.style.display = 'none';
         Elements.mainContainer.style.display = 'none';
         Elements.settingsContainer.style.display = '';
+        app.applySettingsToPage();
         app.picker.pauseScanning();
     },
 
+    setScanningUI: (isPaused) => {
+        Elements.continueButton.hidden = !isPaused;
+        Elements.continueButton.disabled = !isPaused;
+    },
+
+    showBarcodes: (barcodes) => {
+        Elements.resultContainer.innerHTML = barcodes.reduce((string, barcode) =>
+        `${string}<div><span class="symbology">${ScanditSDK.Barcode.Symbology.toHumanizedName(barcode.symbology)}</span>
+         ${barcode.data}</div>`,
+        "");
+    },
+
     guiStyleToggled: guiStyle => {
-        Object.values(Elements.guiStyle).forEach(toggle => {
+        Elements.guiStyle.all.forEach(toggle => {
             if (toggle.guiStyle() == guiStyle) {
                 toggle.setChecked(true);
             } else {
@@ -60,8 +75,8 @@ export const ViewFunctions = {
 
     cameraEnabledToggled: cameraType => {
         const cameraTypeToDisable = cameraType === 'front' ? 'back' : 'front';
-        document.getElementById(`camera-${cameraType}`).checked = true;
-        document.getElementById(`camera-${cameraTypeToDisable}`).checked = false;
+        Elements.camera[cameraType].checked = true;
+        Elements.camera[cameraTypeToDisable].checked = false;
     },
 
     restrictedScanningToggled: () => {
@@ -73,8 +88,7 @@ export const ViewFunctions = {
 
     setCameraButtonsEnabled: () => {
         ScanditSDK.CameraAccess.getCameras()
-            .then(cameras => Array.from(document.getElementsByClassName('camera-button'))
-                .forEach(button => button.disabled = cameras.length <= 1))
+            .then(cameras => Elements.camera.all.forEach(camera => camera.disabled = cameras.length <= 1))
             .catch(app.handleError)
     },
 };
