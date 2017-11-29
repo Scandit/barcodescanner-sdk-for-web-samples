@@ -15,8 +15,15 @@ export class App {
         // Create a basic scanner settings object
         this.scanSettings = new ScanditSDK.ScanSettings();
         this.scanSettings.enableSymbologies([
-            ScanditSDK.Barcode.Symbology.UPCA,
+            ScanditSDK.Barcode.Symbology.EAN13,
+            ScanditSDK.Barcode.Symbology.EAN8,
+            ScanditSDK.Barcode.Symbology.CODE39,
+            ScanditSDK.Barcode.Symbology.CODE93,
             ScanditSDK.Barcode.Symbology.CODE128,
+            ScanditSDK.Barcode.Symbology.UPCA,
+            ScanditSDK.Barcode.Symbology.UPCE,
+            ScanditSDK.Barcode.Symbology.INTERLEAVED_2_OF_5,
+            ScanditSDK.Barcode.Symbology.QR,
         ]);
 
         this.createPickerOptions = {
