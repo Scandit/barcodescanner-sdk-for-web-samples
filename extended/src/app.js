@@ -45,11 +45,7 @@ export class App {
      *
      */
     startScanner() {
-        return ScanditSDK.configure(Config.licenseKey, {
-                engineLocation: Config.engineLocation,
-                preloadCameras: true,
-                preloadEngineLibrary: true,
-            })
+        return ScanditSDK.configure(Config.licenseKey, { engineLocation: Config.engineLocation})
             .then(() => this.createPicker(this.createPickerOptions))
             .catch(this.handleError);
     }
