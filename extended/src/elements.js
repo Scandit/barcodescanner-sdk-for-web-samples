@@ -19,13 +19,13 @@ export const Elements = {
         const humanizedName = ScanditSDK.Barcode.Symbology.toHumanizedName(symbology);
         var template = document.createElement('template');
         template.innerHTML = `<div class="symbology">
-                                      <label class="toggle">
-                                          <input type="checkbox" name="${humanizedName} Toggle"
-                                              id="symbology-${symbology}">
-                                          <span class="slider"></span>
-                                      </label>
-                                      <span>${humanizedName}</span>
-                                  </div>`;
+                                  <label class="toggle">
+                                      <input type="checkbox" name="${humanizedName} Toggle"
+                                          id="symbology-${symbology}">
+                                      <span class="slider"></span>
+                                  </label>
+                                  <span>${humanizedName}</span>
+                              </div>`;
         // Add the reference to the view element to the convenience accessor
         Elements.symbology[symbology] = template.content.firstElementChild;
         const checkbox = Elements.symbology[symbology].firstElementChild.firstElementChild;
@@ -46,12 +46,12 @@ export const Elements = {
         }
         var template = document.createElement('template');
         template.innerHTML = `<div class="gui-style segment-item">
-                                      <input type="checkbox" name="${guiStyle} GUI Style Toggle"
-                                          id="gui-style-${guiStyle}" onchange="guiStyleToggled('${guiStyle}')">
-                                      <div class="segment-item-inner">
-                                          <span>${guiStyle}</span>
-                                      </div>
-                                  </div>`;
+                                  <input type="checkbox" name="${guiStyle} GUI Style Toggle"
+                                      id="gui-style-${guiStyle}" onchange="guiStyleToggled('${guiStyle}')">
+                                  <div class="segment-item-inner">
+                                      <span>${guiStyle}</span>
+                                  </div>
+                              </div>`;
         // Add the reference to the view element to the convenience accessor
         Elements.guiStyle[guiStyle] = template.content.firstElementChild;
         const checkbox = Elements.guiStyle[guiStyle].firstElementChild;
