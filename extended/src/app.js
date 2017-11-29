@@ -127,7 +127,9 @@ export class App {
 
         // If the restricted area toggle is on, set the restricted search area where barcodes are scanned
         if (Elements.restrictedArea.isRestricted()) {
-            this.scanSettings.setSearchArea(Elements.restrictedArea.value);
+            this.scanSettings.setSearchArea(Elements.restrictedArea.value());
+        } else {
+            this.scanSettings.setSearchArea({width: 1, height: 1, x: 0, y: 0});
         }
 
         // Set the code duplicate filter
