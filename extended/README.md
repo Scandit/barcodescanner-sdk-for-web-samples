@@ -18,18 +18,7 @@ npm install
 npm start
 ```
 
-## Browser Specific Notes for local development
-
-In *Chrome*, you should be able to run the sample without any changes or modifications to the sample or the browser
-options.
-
-In *Safari*, you can turn on Developer mode
-([learn more](https://support.apple.com/en-us/guide/safari/use-the-safari-develop-menu-sfri20948/mac))
-and enable media capture on insecure sites (_Develop > WebRTC > Allow Media Capture on Insecure sites_) to run the
-extended sample locally in Safari.  
-For your own safety, disable the option again once you don't need it anymore for the purposes of development.  
-_(The local development server is not considered "safe" by Safari as it isn't served through `https` and so it's not allowing it to access the camera
-by default.)_
+## Notes for local development on a device
 
 For accessing your local development server from a device other than your development machine, a service like
 [ngrok](https://ngrok.com/) can be used.  
@@ -39,3 +28,6 @@ commands that assume that the local server is accessible on port 8080:
 npm i ngrok -g
 ngrok http 8080 -host-header="localhost:8080"
 ```
+
+_You'll be able to access the development server through both `http` and `https`, you should use `https` because of
+possible browser restrictions._
