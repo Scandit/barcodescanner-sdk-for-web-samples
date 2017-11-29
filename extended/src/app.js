@@ -27,7 +27,7 @@ export class App {
         ]);
 
         this.createPickerOptions = {
-            visible: false,
+            visible: true,
             scanningPaused: true,
             scanSettings: this.scanSettings,
         };
