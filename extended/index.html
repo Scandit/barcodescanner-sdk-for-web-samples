@@ -60,64 +60,78 @@
             <div id="gui-styles">
                 <!-- Added dynamically -->
             </div>
-            <div padding-top>
-                <span>Restricted Scanning Area</span>
-                <label class="toggle">
-                    <input type="checkbox" name="Restricted Scanning Toggle" id="restricted-scanning" onchange="restrictedScanningToggled()">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div padding-left>
-                <span>Width</span>
-                <input type="text" placeholder="0-1" id="restricted-area-width">
-            </div>
-            <div padding-left>
-                <span>Height</span>
-                <input type="text" placeholder="0-1" id="restricted-area-height">
-            </div>
-            <div padding-left>
-                <span>Position X</span>
-                <input type="text" placeholder="0-1" id="restricted-area-x">
-            </div>
-            <div padding-left>
-                <span>Position Y</span>
-                <input type="text" placeholder="0-1" id="restricted-area-y">
-            </div>
+
+            <table padding-top>
+                <tr>
+                    <td><span>Restricted Scanning Area</span></td>
+                    <td align="center" class="padding-left">
+                        <label class="toggle">
+                            <input type="checkbox" name="Restricted Scanning Toggle" id="restricted-scanning" onchange="restrictedScanningToggled()">
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="padding-left"><span>Width</span></td>
+                    <td align="center" class="padding-left"><input type="text" placeholder="0-1" id="restricted-area-width"></td>
+                </tr>
+                <tr>
+                    <td class="padding-left"><span>Height</span></td>
+                    <td align="center" class="padding-left"><input type="text" placeholder="0-1" id="restricted-area-height"></td>
+                </tr>
+                <tr>
+                    <td class="padding-left"><span>Position X</span></td>
+                    <td align="center" class="padding-left"><input type="text" placeholder="0-1" id="restricted-area-x"></td>
+                </tr>
+                <tr>
+                    <td class="padding-left"><span>Position Y</span></td>
+                    <td align="center" class="padding-left"><input type="text" placeholder="0-1" id="restricted-area-y"></td>
+                </tr>
+            </table>
         </div>
 
         <div class="section">
             <div class="section-header">
                 <h2>Advanced Settings</h2>
             </div>
-            <div>
-                <span>Beep on scan</span>
-                <label class="toggle">
-                    <input type="checkbox" name="Beep Scan Feedback Toggle" id="beep-enabled">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div>
-                <span>Vibrate on scan</span>
-                <label class="toggle">
-                    <input type="checkbox" name="Vibration Scan Feedback Toggle" id="vibration-enabled">
-                    <span class="slider"></span>
-                </label>
-            </div>
-            <div>
-                <span>Duplicate code filter (in ms)</span>
-                <input type="text" placeholder="1000" id="duplicate-code-filter">
-            </div>
-            <div>
-                <span>Max codes per frame</span>
-                <input type="text" placeholder="1" id="max-codes-per-frame">
-            </div>
-            <div>
-                <span>Image mirroring</span>
-                <label class="toggle">
-                    <input type="checkbox" name="Image Mirroring Toggle" id="mirroring-enabled">
-                    <span class="slider"></span>
-                </label>
-            </div>
+
+            <table>
+                <tr>
+                    <td><span>Beep on scan</span></td>
+                    <td align="center" class="padding-left">
+                        <label class="toggle">
+                            <input type="checkbox" name="Beep Scan Feedback Toggle" id="beep-enabled">
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span>Vibrate on scan</span></td>
+                    <td align="center" class="padding-left">
+                        <label class="toggle">
+                            <input type="checkbox" name="Vibration Scan Feedback Toggle" id="vibration-enabled">
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td><span>Duplicate code filter (in ms)</span></td>
+                    <td align="center" class="padding-left"><input type="text" placeholder="1000" id="duplicate-code-filter"></td>
+                </tr>
+                <tr>
+                    <td><span>Max codes per frame</span></td>
+                    <td align="center" class="padding-left"><input type="text" placeholder="1" id="max-codes-per-frame"></td>
+                </tr>
+                <tr>
+                    <td><span>Image mirroring</span></td>
+                    <td align="center" class="padding-left">
+                        <label class="toggle">
+                            <input type="checkbox" name="Image Mirroring Toggle" id="mirroring-enabled">
+                            <span class="slider"></span>
+                        </label>
+                    </td>
+                </tr>
+            </table>
         </div>
 
         <div class="section">
