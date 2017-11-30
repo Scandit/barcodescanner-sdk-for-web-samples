@@ -77,6 +77,8 @@ export const ViewFunctions = {
         const cameraTypeToDisable = cameraType === 'front' ? 'back' : 'front';
         Elements.camera[cameraType].checked = true;
         Elements.camera[cameraTypeToDisable].checked = false;
+
+        app.setEnabledCamera(Elements.camera.activeType()).catch(e => app.handleError(e));
     },
 
     restrictedScanningToggled: () => {

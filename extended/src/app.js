@@ -141,7 +141,6 @@ export class App {
         this.scanSettings.setMaxNumberOfCodesPerFrame(parseInt(Elements.maxCodesPerFrame.value, 10));
 
         this.applyPickerSettings({
-            cameraType: Elements.camera.activeType(),
             guiStyle: Elements.guiStyles.active(),
             soundEnabled: Elements.beepEnabled.checked,
             vibrationEnabled: Elements.vibrationEnabled.checked,
@@ -178,22 +177,17 @@ export class App {
      * @returns {Promise<BarcodePicker>}
      */
     applyPickerSettings({
-        cameraType,
         guiStyle,
         soundEnabled,
         vibrationEnabled,
         mirroringEnabled,
         scanSettings,
     }) {
-        return this.setEnabledCamera(cameraType)
-            .then(picker => {
-                picker.setGuiStyle(guiStyle)
-                picker.setPlaySoundOnScanEnabled(soundEnabled);
-                picker.setVibrateOnScanEnabled(vibrationEnabled);
-                picker.setMirrorImageEnabled(mirroringEnabled);
-                picker.applyScanSettings(scanSettings);
-                return picker;
-            })
-            .catch(this.handleError);
+        this.picker.setGuiStyle(guiStyle)
+        this.picker.setPlaySoundOnScanEnabled(soundEnabled);
+        this.picker.setVibrateOnScanEnabled(vibrationEnabled);
+        this.picker.setMirrorImageEnabled(mirroringEnabled);
+        this.picker.applyScanSettings(scanSettings);
+        return this.picker;
     }
 }
