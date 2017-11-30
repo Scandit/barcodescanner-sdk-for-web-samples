@@ -88,6 +88,7 @@ a:visited {
 button,
 button:active,
 button[disabled]:hover {
+    cursor: pointer;
     --webkit-appearance: none;
     border: none;
     border-radius: 0;
@@ -366,6 +367,7 @@ input:checked+.slider:before {
 /* Hide default HTML checkbox */
 
 .segment-item input {
+    cursor: pointer;
     position: absolute;
     top: 0;
     left: 0;
