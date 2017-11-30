@@ -1,3 +1,5 @@
+To get started with the Scandit Web SDK, take a look at the [documentation](http://docs.scandit.com/stable/web/index.html).
+
 # Running the extended sample
 
 ## License key
@@ -31,3 +33,8 @@ ngrok http 8080 -host-header="localhost:8080"
 
 _You'll be able to access the development server through both `http` and `https`, you should use `https` because of
 possible browser restrictions._
+
+# Browser restrictions
+
+HTTPS is needed by browsers for security reasons as the Scandit Web SDK library asks for camera access. To learn more
+about browser support and other important notes, take a look at the [Web SDK documentation](http://docs.scandit.com/stable/web/index.html#important-notes).
