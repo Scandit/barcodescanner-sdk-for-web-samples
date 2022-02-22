@@ -1,5 +1,5 @@
 {
-  "name": "scandit-sdk-react-sample",
+  "name": "websdk-samples-react",
   "version": "1.0.0",
   "files": [
     "css",
@@ -16,7 +16,7 @@
     "react": "16.x"
   },
   "devDependencies": {
-    "nwb": "^0.24.6",
+    "nwb": "^0.25.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1"
   },
