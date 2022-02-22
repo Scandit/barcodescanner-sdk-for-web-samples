@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "scandit-sdk-angular-samples",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",

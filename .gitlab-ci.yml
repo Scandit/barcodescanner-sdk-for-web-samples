@@ -1,0 +1,39 @@
+workflow:
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+    - if: '$CI_COMMIT_BRANCH == "master"'
+
+stages:
+  - lint
+
+
+sonarqube:
+  stage: lint
+  extends:
+    - .gitlab-templates.sonarqube-template
+
+snyk-dependency-monitor:
+  stage: lint
+  extends:
+    - .gitlab-templates.snyk-monitor
+  image: 
+    name: snyk/snyk:node
+    entrypoint: [""]
+  
+snyk-dependency-test:
+  stage: lint
+  extends:
+    - .gitlab-templates.snyk-test
+  image: 
+    name: snyk/snyk:node
+    entrypoint: [""]
+  # remove allow_failure when existing vulnerabilities have been addressed.
+  allow_failure: true
+
+include:
+  - project: internal/gitlab-templates
+    ref: master
+    file: .gitlab/sonarqube.yml
+  - project: internal/gitlab-templates
+    file: .gitlab/snyk.yml
+    ref: master
