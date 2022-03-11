@@ -1,0 +1,17 @@
+<mvc:View
+	controllerName="ns.testproject.controller.App"
+	displayBlock="true"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+    xmlns:html="http://www.w3.org/1999/xhtml">
+
+    <html:div id="scandit-barcode-picker"></html:div>    
+
+	<Shell>
+	<App
+		id="app"
+		busy="{appView>/busy}"
+		busyIndicatorDelay="{appView>/delay}"/>
+	</Shell>
+
+</mvc:View>
