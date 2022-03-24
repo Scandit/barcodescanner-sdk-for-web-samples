@@ -17,11 +17,11 @@
   },
   "devDependencies": {
     "nwb": "^0.25.2",
-    "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0"
   },
   "dependencies": {
-    "scandit-sdk": "^4.6.3"
+    "scandit-sdk": "^5.8.0"
   },
   "keywords": [
     "scandit",
