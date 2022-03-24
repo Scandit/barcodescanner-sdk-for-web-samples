@@ -29,7 +29,7 @@
         margin: 4vh;
       }
 
-      button {
+      #barcode-picker-starter-button {
         background-color: #555;
         color: white;
         font-size: 3vh;
@@ -39,6 +39,7 @@
         margin-top: 5vh;
         width: 70vw;
         max-width: 500px;
+        cursor: pointer;
       }
 
       .result-text {
@@ -55,68 +56,45 @@
 
   <body>
     <div class="logo"></div>
-    <div class="name">Simple sample</div>
+    <div class="name">Web Component Simple Sample</div>
     <div id="description" class="description">Start the scanner and then aim at a barcode to get the encoded data.</div>
     <div id="lib-loading"><br />Library is loading, please wait...</div>
-    <button id="barcode-picker-starter-button" onclick="startBarcodePicker();" hidden>Start Scanning</button>
+    <button id="barcode-picker-starter-button" hidden onclick="startBarcodePicker()">Start Scanning</button>
     <div id="barcode-result" class="result-text">&nbsp;</div>
-    <div id="barcode-picker" class="scanner"></div>
+
+    <scandit-barcode-picker
+      id="barcode-picker"
+      class="scanner"
+      configure.licenseKey="YOUR_LICENSE_KEY_IS_NEEDED_HERE"
+      configure.engineLocation="https://cdn.jsdelivr.net/npm/scandit-sdk@5.x/build/"
+      accessCamera="false"
+      visible="false"
+      playSoundOnScan="true"
+      vibrateOnScan="true"
+      scanSettings.enabledSymbologies='["ean8", "ean13", "upca", "upce"]'
+    ></scandit-barcode-picker>
 
     <script>
-      let scanditBarcodePicker;
+      const barcodePickerElement = document.getElementById("barcode-picker");
 
-      const key = "YOUR_LICENSE_KEY_IS_NEEDED_HERE";
-      ScanditSDK.configure(key, {
-        engineLocation: "https://cdn.jsdelivr.net/npm/scandit-sdk@5.x/build",
-      })
-        .then(function () {
-          return ScanditSDK.BarcodePicker.create(document.getElementById("barcode-picker"), {
-            scanningPaused: true,
-            accessCamera: false,
-            visible: false,
-            playSoundOnScan: true,
-            vibrateOnScan: true,
-          }).then(function (barcodePicker) {
-            scanditBarcodePicker = barcodePicker;
-            const scanSettings = new ScanditSDK.ScanSettings({
-              enabledSymbologies: ["ean8", "ean13", "upca", "upce", "code128", "code39", "itf", "qr", "data-matrix"],
-              searchArea: { x: 0, y: 0.333, width: 1, height: 0.333 },
-            });
-            barcodePicker.applyScanSettings(scanSettings);
-            barcodePicker.on("ready", function () {
-              document.getElementById("lib-loading").hidden = true;
-              document.getElementById("barcode-picker-starter-button").hidden = false;
-            });
-            barcodePicker.on("scan", function (scanResult) {
-              document.getElementById("barcode-result").innerHTML = scanResult.barcodes.reduce(function (
-                string,
-                barcode
-              ) {
-                return (
-                  string +
-                  ScanditSDK.Barcode.Symbology.toHumanizedName(barcode.symbology) +
-                  ": " +
-                  barcode.data +
-                  "<br>"
-                );
-              },
-              "");
-            });
-            barcodePicker.on("scanError", function (error) {
-              console.error(error);
-            });
-          });
-        })
-        .catch(function (error) {
-          alert(error);
-        });
+      barcodePickerElement.addEventListener("scan", (scanResult) => {
+        const barcode = scanResult.detail.barcodes[0];
+        const symbology = ScanditSDK.Barcode.Symbology.toHumanizedName(barcode.symbology);
+
+        document.getElementById("barcode-result").innerText = `${barcode.symbology} ${barcode.data}`;
+      });
+
+      barcodePickerElement.addEventListener("ready", () => {
+        document.getElementById("lib-loading").hidden = true;
+        document.getElementById("barcode-picker-starter-button").hidden = false;
+      });
 
       function startBarcodePicker() {
         document.getElementById("barcode-picker-starter-button").hidden = true;
         document.getElementById("description").hidden = true;
 
-        scanditBarcodePicker.accessCamera().then(function () {
-          scanditBarcodePicker.setVisible(true).resumeScanning();
+        barcodePickerElement.barcodePicker.accessCamera().then(() => {
+          barcodePickerElement.barcodePicker.setVisible(true).resumeScanning();
         });
       }
     </script>

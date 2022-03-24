@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="logo"></div>
+  <div class="name">Simple Sample</div>
+  <div id="description" class="description" *ngIf="showDescription">
+    Start the scanner and then aim at a barcode to get the encoded data.
+  </div>
+
+  <div id="lib-loading" *ngIf="!scannerReady">
+    <br />Library is loading, please wait...
+  </div>
+
+  <button id="barcode-picker-starter-button" *ngIf="showButton" (click)="startBarcodePicker()">
+    Start Scanning
+  </button>
+
+  <div id="barcode-result" class="result-text">{{ result }}</div>
+
+  <scandit-barcode-picker
+    #barcodePicker
+    id="barcode-picker"
+    configure.licenseKey="YOUR_LICENSE_KEY_IS_NEEDED_HERE"
+    configure.engineLocation="https://cdn.jsdelivr.net/npm/scandit-sdk@5.x/build/"
+    scanningPaused="true"
+    visible="false"
+    playSoundOnScan="true"
+    vibrateOnScan="true"
+    scanSettings.enabledSymbologies='["ean8", "ean13", "upca", "upce"]'
+    (ready)="onReady()"
+    (scan)="onScan($event)">
+  </scandit-barcode-picker>
+</div>

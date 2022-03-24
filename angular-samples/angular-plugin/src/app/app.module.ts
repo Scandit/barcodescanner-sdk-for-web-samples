@@ -12,7 +12,7 @@ const engineLocation: string = "https://cdn.jsdelivr.net/npm/scandit-sdk@4.x/bui
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, ScanditSdkModule.forRoot(licenseKey, engineLocation)],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 // tslint:disable-next-line:no-unnecessary-class
 export class AppModule {}
