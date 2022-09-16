@@ -1,38 +1,55 @@
 {
-  "name": "websdk-samples-react",
-  "version": "1.0.0",
-  "files": [
-    "css",
-    "es",
-    "lib",
-    "umd"
-  ],
-  "scripts": {
-    "build": "nwb build-react-component",
-    "clean": "nwb clean-module && nwb clean-demo",
-    "start": "nwb serve-react-demo"
-  },
-  "peerDependencies": {
-    "react": "16.x"
-  },
-  "devDependencies": {
-    "nwb": "^0.25.2",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0"
-  },
-  "dependencies": {
-    "scandit-sdk": "^5.8.0"
-  },
-  "keywords": [
-    "scandit",
-    "barcode",
-    "scan",
-    "scanning",
-    "code",
-    "webassembly",
-    "sdk",
-    "react",
-    "component",
-    "react-component"
-  ]
+    "name": "websdk-samples-react",
+    "version": "1.0.0",
+    "dependencies": {
+        "@testing-library/jest-dom": "^5.16.5",
+        "@testing-library/react": "^13.4.0",
+        "@testing-library/user-event": "^13.5.0",
+        "@types/jest": "^27.5.2",
+        "@types/node": "^16.11.59",
+        "@types/react": "^18.0.20",
+        "@types/react-dom": "^18.0.6",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-scripts": "5.0.1",
+        "sass": "^1.54.9",
+        "scandit-sdk": "^5.12.x",
+        "typescript": "^4.8.3"
+    },
+    "scripts": {
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "keywords": [
+        "scandit",
+        "barcode",
+        "scan",
+        "scanning",
+        "code",
+        "webassembly",
+        "sdk",
+        "react",
+        "component",
+        "react-component"
+    ]
 }

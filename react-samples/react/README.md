@@ -1,6 +1,6 @@
 # React Demo - Scandit Web SDK
 
-This project is based on (and requires) `nwb`, you can install it by running `npm i -g nwb`.
+This project is based on (and requires) `create-react-app`, you can install it by running `npm i -g nwb`.
 
 ## Development server
 
