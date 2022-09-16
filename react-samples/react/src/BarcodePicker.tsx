@@ -1,5 +1,5 @@
-import { MutableRefObject, useEffect, useRef, useState } from "react";
-import {  ScanResult, BarcodePicker } from "scandit-sdk";
+import { MutableRefObject, useEffect, useRef } from "react";
+import { ScanResult, BarcodePicker } from "scandit-sdk";
 
 type ArgumentTypes<F extends Function> = F extends (...args: infer A) => any ? A : never;
 
@@ -10,7 +10,7 @@ type Props = {
     onError?: (error: Error) => void
 } & CreateArguments;
 
-const BarcodePickerWrapper =  ({ onScan, onError, ...createProps }: Props) => {
+const BarcodePickerWrapper = ({ onScan, onError, ...createProps }: Props) => {
     //TODO: what?
     const ref = useRef() as MutableRefObject<HTMLInputElement>;
 
@@ -21,9 +21,9 @@ const BarcodePickerWrapper =  ({ onScan, onError, ...createProps }: Props) => {
 
             onScan && barcodePicker.on("scan", onScan);
             onError && barcodePicker.on("scanError", onError);
-            
+
         })()
-        return ()=> barcodePicker?.destroy();
+        return () => barcodePicker?.destroy();
     }, []);
 
     return <div ref={ref} className="barcode" />;

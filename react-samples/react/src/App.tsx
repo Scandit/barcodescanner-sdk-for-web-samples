@@ -2,8 +2,12 @@ import BarcodePickerWrapper from './BarcodePicker';
 import { Barcode, ScanSettings } from 'scandit-sdk';
 import { useState } from 'react';
 
+
 function App() {
     const [result, setResult] = useState('');
+
+
+
     return (
         <div className="App">
             <div id="scandit-barcode-result" className="result-text">{result}</div>
