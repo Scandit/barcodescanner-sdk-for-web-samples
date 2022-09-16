@@ -1,14 +1,16 @@
-import BarcodePicker from './BarcodePicker';
+import BarcodePickerWrapper from './BarcodePicker';
 import { Barcode, ScanSettings } from 'scandit-sdk';
+import { useState } from 'react';
 
 function App() {
+    const [result, setResult] = useState('');
     return (
         <div className="App">
-            {/* <div id="scandit-barcode-result" className="result-text"></div> */}
+            <div id="scandit-barcode-result" className="result-text">{result}</div>
 
-            <BarcodePicker
+            <BarcodePickerWrapper
                 playSoundOnScan={true}
-                vibrateOnScan={true}
+                // vibrateOnScan={true}
                 scanSettings={
                     new ScanSettings({
                         enabledSymbologies: [Barcode.Symbology.QR, Barcode.Symbology.EAN8, Barcode.Symbology.EAN13, Barcode.Symbology.UPCA, Barcode.Symbology.UPCE, Barcode.Symbology.CODE128, Barcode.Symbology.CODE39, Barcode.Symbology.CODE93, Barcode.Symbology.GS1_DATABAR],
@@ -16,19 +18,13 @@ function App() {
                     })
                 }
                 onScan={(scanResult) => {
+                    const result = scanResult.barcodes.reduce((string, barcode) => {
+                        return string + Barcode.Symbology.toHumanizedName(barcode.symbology) + ": " + barcode.data;
+                    }, '');
 
-                    console.log(scanResult);
-                    //   document.getElementById("scandit-barcode-result").innerHTML = scanResult.barcodes.reduce(function(
-                    //     string,
-                    //     barcode
-                    //   ) {
-                    //     return string + Barcode.Symbology.toHumanizedName(barcode.symbology) + ": " + barcode.data + "<br>";
-                    //   },
-                    //   "");
-                }
+                    setResult(result);
+                }}
 
-
-                }
                 onError={(error) => {
                     console.error(error.message);
                 }}
