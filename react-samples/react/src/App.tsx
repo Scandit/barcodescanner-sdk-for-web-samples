@@ -4,7 +4,7 @@ import { Barcode, ScanSettings } from 'scandit-sdk';
 function App() {
     return (
         <div className="App">
-            <div id="scandit-barcode-result" className="result-text"></div>
+            {/* <div id="scandit-barcode-result" className="result-text"></div> */}
 
             <BarcodePicker
                 playSoundOnScan={true}
@@ -15,7 +15,7 @@ function App() {
                         codeDuplicateFilter: 1000
                     })
                 }
-                onScan={scanResult => {
+                onScan={(scanResult) => {
 
                     console.log(scanResult);
                     //   document.getElementById("scandit-barcode-result").innerHTML = scanResult.barcodes.reduce(function(
@@ -29,7 +29,7 @@ function App() {
 
 
                 }
-                onError={error => {
+                onError={(error) => {
                     console.error(error.message);
                 }}
             />
