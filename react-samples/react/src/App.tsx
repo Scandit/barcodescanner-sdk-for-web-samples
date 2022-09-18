@@ -1,6 +1,19 @@
-import BarcodePickerWrapper from './BarcodePicker';
-import { Barcode, ScanSettings } from 'scandit-sdk';
+import BarcodePickerWrapper from './BarcodePickerWrapper';
+import { Barcode, BarcodePicker, ScanSettings } from 'scandit-sdk';
 import { useState } from 'react';
+
+const features = {
+    visible: true,
+        playSoundOnScan: true,
+        vibrateOnScan: false,
+        scanningPaused: false,
+        guiStyle: BarcodePicker.GuiStyle.LASER,
+        enableCameraSwitcher: true,
+        enableTorchToggle: true,
+        enableTapToFocus: true,
+        enablePinchToZoom: true,
+        accessCamera: true
+}
 
 const enabledSymbologies = [
     Barcode.Symbology.QR, 
@@ -21,8 +34,7 @@ function App() {
             <div id="scandit-barcode-result" className="result-text">{result}</div>
 
             <BarcodePickerWrapper
-                playSoundOnScan={true}
-                // vibrateOnScan={true}
+                {...features}
                 scanSettings={
                     new ScanSettings({
                         enabledSymbologies,
