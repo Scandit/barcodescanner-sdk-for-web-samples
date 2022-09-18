@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useRef } from "react";
+import { memo, MutableRefObject, useEffect, useRef } from "react";
 import { ScanResult, BarcodePicker } from "scandit-sdk";
 
 type ArgumentTypes<F extends Function> = F extends (...args: infer A) => any ? A : never;
@@ -20,12 +20,12 @@ const BarcodePickerWrapper = ({ onScan, onError, ...createProps }: Props) => {
 
             onScan && barcodePicker.on("scan", onScan);
             onError && barcodePicker.on("scanError", onError);
-
         })()
         return () => barcodePicker?.destroy();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return <div ref={ref} className="barcode" data-testid="barcode-picker"/>;
+    return <div ref={ref} className="barcode"/>;
 }
 
-export default BarcodePickerWrapper;
+export default memo(BarcodePickerWrapper);

@@ -13,7 +13,7 @@ const features = {
     enableTapToFocus: true,
     enablePinchToZoom: true,
     accessCamera: true
-}
+};
 
 const enabledSymbologies = [
     Barcode.Symbology.QR,
