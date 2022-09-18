@@ -11,7 +11,6 @@ type Props = {
 } & CreateArguments;
 
 const BarcodePickerWrapper = ({ onScan, onError, ...createProps }: Props) => {
-    //TODO: what?
     const ref = useRef() as MutableRefObject<HTMLInputElement>;
 
     useEffect(() => {

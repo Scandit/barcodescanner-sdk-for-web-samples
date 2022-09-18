@@ -2,13 +2,19 @@ import BarcodePickerWrapper from './BarcodePicker';
 import { Barcode, ScanSettings } from 'scandit-sdk';
 import { useState } from 'react';
 
-
-
+const enabledSymbologies = [
+    Barcode.Symbology.QR, 
+    Barcode.Symbology.EAN8, 
+    Barcode.Symbology.EAN13, 
+    Barcode.Symbology.UPCA, 
+    Barcode.Symbology.UPCE, 
+    Barcode.Symbology.CODE128, 
+    Barcode.Symbology.CODE39, 
+    Barcode.Symbology.CODE93, 
+    Barcode.Symbology.GS1_DATABAR];
 
 function App() {
     const [result, setResult] = useState('');
-
-
 
     return (
         <div className="App">
@@ -19,10 +25,11 @@ function App() {
                 // vibrateOnScan={true}
                 scanSettings={
                     new ScanSettings({
-                        enabledSymbologies: [Barcode.Symbology.QR, Barcode.Symbology.EAN8, Barcode.Symbology.EAN13, Barcode.Symbology.UPCA, Barcode.Symbology.UPCE, Barcode.Symbology.CODE128, Barcode.Symbology.CODE39, Barcode.Symbology.CODE93, Barcode.Symbology.GS1_DATABAR],
+                        enabledSymbologies,
                         codeDuplicateFilter: 1000
                     })
                 }
+                
                 onScan={(scanResult) => {
                     const result = scanResult.barcodes.reduce((string, barcode) => {
                         return string + Barcode.Symbology.toHumanizedName(barcode.symbology) + ": " + barcode.data;
