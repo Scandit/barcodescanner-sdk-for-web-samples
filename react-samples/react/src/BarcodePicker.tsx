@@ -3,12 +3,12 @@ import { ScanResult, BarcodePicker } from "scandit-sdk";
 
 type ArgumentTypes<F extends Function> = F extends (...args: infer A) => any ? A : never;
 
-type CreateArguments = ArgumentTypes<typeof BarcodePicker.create>[1];
+type CreateProps = ArgumentTypes<typeof BarcodePicker.create>[1];
 
 type Props = {
     onScan?: (scanResult: ScanResult) => void,
     onError?: (error: Error) => void
-} & CreateArguments;
+} & CreateProps;
 
 const BarcodePickerWrapper = ({ onScan, onError, ...createProps }: Props) => {
     const ref = useRef() as MutableRefObject<HTMLInputElement>;
@@ -25,7 +25,7 @@ const BarcodePickerWrapper = ({ onScan, onError, ...createProps }: Props) => {
         return () => barcodePicker?.destroy();
     }, []);
 
-    return <div ref={ref} className="barcode" />;
+    return <div ref={ref} className="barcode" data-testid="barcode-picker"/>;
 }
 
 export default BarcodePickerWrapper;
