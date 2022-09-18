@@ -20,7 +20,8 @@
         "start": "react-scripts start",
         "build": "react-scripts build",
         "test": "react-scripts test",
-        "eject": "react-scripts eject"
+        "eject": "react-scripts eject",
+        "postinstall": "copyfiles --up 3 \"./node_modules/scandit-sdk/build/**/*\" \"./public/sdk\""
     },
     "eslintConfig": {
         "extends": [
@@ -51,5 +52,8 @@
         "react",
         "component",
         "react-component"
-    ]
+    ],
+    "devDependencies": {
+        "copyfiles": "^2.4.1"
+    }
 }
