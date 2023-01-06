@@ -11,7 +11,6 @@ import { ViewFunctions } from './helpers';
 export class App {
     constructor() {
         this.continuousScanning = false;
-        this.picker;
 
         // Create a basic scanner settings object
         this.scanSettings = new ScanditSDK.ScanSettings();
