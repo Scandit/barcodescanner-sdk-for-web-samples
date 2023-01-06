@@ -34,7 +34,7 @@ sap.ui.define([
 						oMainDataSource = oManifestModel.getProperty("/sap.app/dataSources/mainService"),
 						sMetadataUrl = sap.ui.require.toUrl(_sAppPath + oMainDataSource.settings.localUri),
 						// ensure there is a trailing slash
-						sMockServerUrl = /.*\/$/.test(oMainDataSource.uri) ? oMainDataSource.uri : oMainDataSource.uri + "/";
+						sMockServerUrl = oMainDataSource.uri.replace(/\/?$/, "/");
 						// ensure the URL to be relative to the application
 						sMockServerUrl = sMockServerUrl && new URI(sMockServerUrl).absoluteTo(sap.ui.require.toUrl(_sAppPath)).toString();
 
